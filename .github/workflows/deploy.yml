@@ -16,6 +16,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Log success message (Deployment Triggered)
+      run: echo "Frontend deployment triggered successfully!"  
+
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
@@ -23,3 +26,4 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+
