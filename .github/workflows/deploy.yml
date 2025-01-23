@@ -2,7 +2,7 @@ name: Frontend Deployment
 
 on:
   repository_dispatch:
-    types: [deploy]
+    types: deploy
   #push:
   #  branches:
   #    - main
