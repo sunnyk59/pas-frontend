@@ -1,13 +1,14 @@
 name: Frontend Deployment
 
 on:
-    repository_dispatch:
-      types:
-        - deploy
-  #push:
-  #  branches:
-  #    - main
-  #    - release
+  repository_dispatch:
+    types: [deploy]
+  push:
+    branches:
+        - main
+  pull_request:
+    branches:
+        - main
 
 jobs:
   build-deploy:
@@ -17,9 +18,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Log success message (Deployment Triggered)
-      run: echo "Frontend deployment triggered successfully!"  
-
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
@@ -27,4 +25,20 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+
+    - name: Build Docker image for React app
+      run: |
+        # Build the Docker image
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/pas-frontend:latest .
+      
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}  # Set your Docker Hub username in GitHub secrets
+        password: ${{ secrets.DOCKER_PASSWORD }}  # Set your Docker Hub password in GitHub secrets
+
+    - name: Push Docker image to Docker Hub
+      run: |
+        docker push abdulmkhan325/pas-frontend:latest
+    
 
