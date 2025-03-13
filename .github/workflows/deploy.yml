@@ -29,10 +29,15 @@ jobs:
       with:
         version: 'latest'
 
-    - name: Configure Minikube
+    - name: Set up Minikube
       run: |
-        minikube start
-        kubectl cluster-info
+          # Check if Minikube is running
+          if ! minikube status | grep -q "host: Running"; then
+            echo "Minikube is not running, starting Minikube..."
+            minikube start --driver=docker
+          else
+            echo "Minikube is already running."
+          fi
 
     - name: Create Namespace if not exists
       run: |
@@ -40,6 +45,6 @@ jobs:
 
     - name: Deploy with Helm
       run: |
-        helm upgrade --install webpas-frontend ./helm \
+        helm upgrade --install webpas-frontend ./k8s/helm \
           --namespace ${{ github.event.inputs.hospital_name }} \
-          --values ./helm/values-${{ github.event.inputs.hospital_name }}.yaml
+          --values ./k8s/helm/values-${{ github.event.inputs.hospital_name }}.yaml
