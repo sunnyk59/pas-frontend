@@ -1,0 +1,4 @@
+apiVersion: v2
+name: webpas-frontend
+description: A Helm chart for the WebPAS frontend
+version: 0.1.0

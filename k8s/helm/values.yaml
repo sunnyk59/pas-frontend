@@ -1,0 +1,4 @@
+namespace: cabrini
+image:
+  repository: abdulmkhan325/webpas-cabrini-frontend
+  tag: latest

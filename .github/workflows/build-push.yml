@@ -1,0 +1,47 @@
+name: webPAS Frontend Build and Push 
+
+on:
+  workflow_dispatch:
+    inputs:
+      hospital_name:
+        description: 'Choose the hospital to deploy'
+        required: true
+        type: choice
+        options:
+          - cabrini
+          - stvincent
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Docker image for React app
+      run: |
+        # Output which hospital is being built
+        echo "Building Docker image for ${{ github.event.inputs.hospital_name }}"
+        
+        # Build the Docker image with the hospital name dynamically
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/webpas-${{ github.event.inputs.hospital_name }}-frontend:latest .
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}  # Set your Docker Hub username in GitHub secrets
+        password: ${{ secrets.DOCKER_PASSWORD }}  # Set your Docker Hub password in GitHub secrets
+
+    - name: Push Docker image to Docker Hub
+      run: |
+        # Push Docker image with the hospital-specific name
+        docker push ${{ secrets.DOCKER_USERNAME }}/webpas-${{ github.event.inputs.hospital_name }}-frontend:latest

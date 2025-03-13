@@ -78,3 +78,31 @@ CMD ["npm", "start"]
     - name: Verify Deployment
       run: |
         kubectl get pods -o wide  # Check if the pods are running correctly
+
+
+
+
+// Ingress.yaml
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webpas-ingress
+  namespace: cabrini-namespace
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/group.name: "webpas-ingress-group"
+spec:
+  rules:
+    - host: cabrini.webpas.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webpas-frontend
+                port:
+                  number: 80

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pas-{{ .Values.namespace }}-frontend-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pas-{{ .Values.namespace }}-frontend
+  template:
+    metadata:
+      labels:
+        app: pas-{{ .Values.namespace }}-frontend
+    spec:
+      containers:
+        - name: webpas-{{ .Values.namespace }}-frontend
+          image: abdulmkhan325/webpas-{{ .Values.namespace }}-frontend:latest
+          ports:
+            - containerPort: 80
