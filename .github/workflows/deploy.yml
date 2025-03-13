@@ -1,14 +1,15 @@
-name: Frontend Deployment
+name: Frontend Deployment for {Hospital Name}
 
 on:
-  repository_dispatch:
-    types: [deploy]
-  push:
-    branches:
-        - main
-  pull_request:
-    branches:
-        - main
+  workflow_dispatch:
+    inputs:
+      hospital_name:
+        description: 'Choose the hospital to deploy'
+        required: true
+        type: choice
+        options:
+          - cabrini
+          - stvincent
 
 jobs:
   build-deploy:
@@ -28,9 +29,12 @@ jobs:
 
     - name: Build Docker image for React app
       run: |
-        # Build the Docker image
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/pas-frontend:latest .
-      
+        # Output which hospital is being built
+        echo "Building Docker image for ${{ github.event.inputs.hospital_name }}"
+        
+        # Build the Docker image with the hospital name dynamically
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/webpas-${{ github.event.inputs.hospital_name }}-frontend:latest .
+
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
@@ -39,6 +43,5 @@ jobs:
 
     - name: Push Docker image to Docker Hub
       run: |
-        docker push abdulmkhan325/pas-frontend:latest
-    
-
+        # Push Docker image with the hospital-specific name
+        docker push ${{ secrets.DOCKER_USERNAME }}/webpas-${{ github.event.inputs.hospital_name }}-frontend:latest

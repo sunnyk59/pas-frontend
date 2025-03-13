@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pas-frontend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pas-frontend
+  template:
+    metadata:
+      labels:
+        app: pas-frontend
+    spec:
+      containers:
+        - name: pas-frontend
+          image: abdulmkhan325/pas-frontend:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pas-frontend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: pas-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
