@@ -1,20 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pas-{{ .Values.namespace }}-frontend-deployment
+  name: {{ .Chart.Name }}
   namespace: {{ .Values.namespace }}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: pas-{{ .Values.namespace }}-frontend
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: pas-{{ .Values.namespace }}-frontend
+        app: {{ .Chart.Name }}
     spec:
       containers:
-        - name: webpas-{{ .Values.namespace }}-frontend
-          image: abdulmkhan325/webpas-{{ .Values.namespace }}-frontend:latest
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 80

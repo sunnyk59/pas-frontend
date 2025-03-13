@@ -17,9 +17,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
        
-      - name: Deploy to Minikube
+      - name: Deploy with Helm
         run: |
-          HOSPITAL=${{ github.event.inputs.hospital_name }}
-          helm upgrade --install webpas-frontend ./helm/webpas-frontend-chart \
-            -f helm/webpas-frontend-chart/values-$HOSPITAL.yaml \
-            --namespace $HOSPITAL
+          helm upgrade --install webpas-frontend ./helm \
+            --namespace ${{ github.event.inputs.hospital_name }} \
+            --values ./helm/values-${{ github.event.inputs.hospital_name }}.yaml

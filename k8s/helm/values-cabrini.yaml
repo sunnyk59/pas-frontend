@@ -2,8 +2,9 @@ namespace: cabrini
 image:
   repository: abdulmkhan325/webpas-cabrini-frontend
   tag: latest
+  pullPolicy: IfNotPresent
 
 service:
-  name: webpas-frontend
-  type: ClusterIP
+  name: webpas-cabrini-frontend-service
+  type: LoadBalancer
   port: 80
