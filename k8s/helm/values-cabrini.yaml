@@ -2,3 +2,8 @@ namespace: cabrini
 image:
   repository: abdulmkhan325/webpas-cabrini-frontend
   tag: latest
+
+service:
+  name: webpas-frontend
+  type: ClusterIP
+  port: 80

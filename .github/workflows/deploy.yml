@@ -17,10 +17,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
        
-      - name: Deploy to Kubernetes
+      - name: Deploy to Minikube
         run: |
-          helm upgrade --install webpas-frontend ./k8s/helm \
-            --set namespace=${{ github.event.inputs.hospital_name }} \
-            --set image.repository=abdulmkhan325/webpas-${{ github.event.inputs.hospital_name }}-frontend \
-            --set image.tag=latest \
-            --namespace ${{ github.event.inputs.hospital_name }}
+          HOSPITAL=${{ github.event.inputs.hospital_name }}
+          helm upgrade --install webpas-frontend ./helm/webpas-frontend-chart \
+            -f helm/webpas-frontend-chart/values-$HOSPITAL.yaml \
+            --namespace $HOSPITAL
